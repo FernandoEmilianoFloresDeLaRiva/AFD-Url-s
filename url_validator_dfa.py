@@ -13,6 +13,9 @@ class URLValidatorDFA:
     def all_letters_except(self, char, exceptLetters):
         return ('a' <= char <= 'z' or 'A' <= char <= 'Z') and char not in exceptLetters
     
+    def is_valid_number(self, char):
+        return char == '0' or char == '1' or char == '2' or char == '3' or char == '4' or char == '5' or char == '6' or char == '7' or char == '8' or char == '9'
+    
     def transition(self, char):
         if self.current_state == 0:
             if char == 'h':
@@ -57,7 +60,7 @@ class URLValidatorDFA:
                 return True  
         elif self.current_state == 8:
             # https://fafae o http://fafea
-            if self.is_letter(char):
+            if self.is_letter(char) or self.is_valid_number(char):
                 return True
             elif char == '.':
                 # https://fafae. o http://fafea.
@@ -65,7 +68,7 @@ class URLValidatorDFA:
                 return True
         elif self.current_state == 9:  # Ruta opcional
             # https://fafae.fsafs o http://fafea.fsafsa
-            if self.all_letters_except(char, {'c', 'o', 'n'}):
+            if self.all_letters_except(char, {'c', 'o', 'n'}) or self.is_valid_number(char):
                 self.current_state = 8
                 return True
             # https://fafae.c o http://fafea.c
@@ -81,7 +84,7 @@ class URLValidatorDFA:
                 self.current_state = 16
                 return True
         elif self.current_state == 10:
-            if self.all_letters_except(char, {'o'}):
+            if self.all_letters_except(char, {'o'}) or self.is_valid_number(char):
                 self.current_state = 8
                 return True
             # https://fafae.co o http://fafea.co
@@ -89,7 +92,7 @@ class URLValidatorDFA:
                 self.current_state = 11
                 return True
         elif self.current_state == 11:
-            if self.all_letters_except(char, {'m'}):
+            if self.all_letters_except(char, {'m'}) or self.is_valid_number(char):
                 self.current_state = 8
                 return True
             # https://fafae.com o http://fafea.com
@@ -97,7 +100,7 @@ class URLValidatorDFA:
                 self.current_state = 12
                 return True
         elif self.current_state == 12:
-            if self.is_letter(char):
+            if self.is_letter(char) or self.is_valid_number(char):
                 self.current_state = 8
                 return True
             # https://fafae.com/ o http://fafea.com/
@@ -105,7 +108,7 @@ class URLValidatorDFA:
                 self.current_state = 19
                 return True
         elif self.current_state == 13:
-            if self.all_letters_except(char, {'r'}):
+            if self.all_letters_except(char, {'r'}) or self.is_valid_number(char):
                 self.current_state = 8
                 return True
             # https://fafae.or o http://fafea.or
@@ -113,7 +116,7 @@ class URLValidatorDFA:
                 self.current_state = 14
                 return True
         elif self.current_state == 14:
-            if self.all_letters_except(char, {'g'}):
+            if self.all_letters_except(char, {'g'}) or self.is_valid_number(char):
                 self.current_state = 8
                 return True
             # https://fafae.org o http://fafea.org
@@ -121,7 +124,7 @@ class URLValidatorDFA:
                 self.current_state = 15
                 return True
         elif self.current_state == 15:
-            if self.is_letter(char):
+            if self.is_letter(char) or self.is_valid_number(char):
                 self.current_state = 8
                 return True
             # https://fafae.org/ o http://fafea.org/
@@ -129,7 +132,7 @@ class URLValidatorDFA:
                 self.current_state = 19
                 return True
         elif self.current_state == 16:
-            if self.all_letters_except(char, {'e'}):
+            if self.all_letters_except(char, {'e'}) or self.is_valid_number(char):
                 self.current_state = 8
                 return True
             # https://fafae.ne o http://fafea.ne
@@ -137,7 +140,7 @@ class URLValidatorDFA:
                 self.current_state = 17
                 return True
         elif self.current_state == 17:
-            if self.all_letters_except(char, {'t'}):
+            if self.all_letters_except(char, {'t'}) or self.is_valid_number(char):
                 self.current_state = 8
                 return True
             # https://fafae.net o http://fafea.net
@@ -145,7 +148,7 @@ class URLValidatorDFA:
                 self.current_state = 18
                 return True
         elif self.current_state == 18:
-            if self.is_letter(char):
+            if self.is_letter(char) or self.is_valid_number(char):
                 self.current_state = 8
                 return True
             # https://fafae.net/ o http://fafea.net/
@@ -156,18 +159,19 @@ class URLValidatorDFA:
             # https://fafae.net/feaf o http://fafea.net/faef
             # https://fafae.com/feaf o http://fafea.com/feaf
             # https://fafae.org/feaf o http://fafea.org/feaf
-            if self.is_letter(char):
+            if self.is_letter(char) or self.is_valid_number(char):
                 self.current_state = 20
                 return True
         elif self.current_state == 20:
             # https://fafae.net/feaf/ o http://fafea.net/faef/
             # https://fafae.com/feaf/ o http://fafea.com/feaf/
             # https://fafae.org/feaf/ o http://fafea.org/feaf/
-            if self.is_letter(char):
+            if self.is_letter(char) or self.is_valid_number(char):
                 return True
             elif char == '/':
                 self.current_state = 19
                 return True
+        
         # Transición fallida, rechaza la URL
         return False
 
