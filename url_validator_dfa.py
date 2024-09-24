@@ -16,6 +16,9 @@ class URLValidatorDFA:
     def is_valid_number(self, char):
         return char == '0' or char == '1' or char == '2' or char == '3' or char == '4' or char == '5' or char == '6' or char == '7' or char == '8' or char == '9'
     
+    def is_special_characters(self, char):
+        return char == '-' or char == '_' or char == '~'
+    
     def transition(self, char):
         if self.current_state == 0:
             if char == 'h':
@@ -61,15 +64,16 @@ class URLValidatorDFA:
         elif self.current_state == 8:
             # https://fafae o http://fafea
             if self.is_letter(char) or self.is_valid_number(char):
+                self.current_state = 21
                 return True
             elif char == '.':
                 # https://fafae. o http://fafea.
                 self.current_state = 9
                 return True
-        elif self.current_state == 9:  # Ruta opcional
+        elif self.current_state == 9:
             # https://fafae.fsafs o http://fafea.fsafsa
             if self.all_letters_except(char, {'c', 'o', 'n'}) or self.is_valid_number(char):
-                self.current_state = 8
+                self.current_state = 21
                 return True
             # https://fafae.c o http://fafea.c
             elif char == 'c':
@@ -84,72 +88,72 @@ class URLValidatorDFA:
                 self.current_state = 16
                 return True
         elif self.current_state == 10:
-            if self.all_letters_except(char, {'o'}) or self.is_valid_number(char):
-                self.current_state = 8
+            if self.all_letters_except(char, {'o'}) or self.is_valid_number(char) or self.is_special_characters(char):
+                self.current_state = 22
                 return True
             # https://fafae.co o http://fafea.co
             elif char == 'o':
                 self.current_state = 11
                 return True
         elif self.current_state == 11:
-            if self.all_letters_except(char, {'m'}) or self.is_valid_number(char):
-                self.current_state = 8
+            if self.all_letters_except(char, {'m'}) or self.is_valid_number(char) or self.is_special_characters(char):
+                self.current_state = 22
                 return True
             # https://fafae.com o http://fafea.com
             elif char == 'm':
                 self.current_state = 12
                 return True
         elif self.current_state == 12:
-            if self.is_letter(char) or self.is_valid_number(char):
-                self.current_state = 8
+            if self.is_letter(char) or self.is_valid_number(char) or self.is_special_characters(char):
+                self.current_state = 22
                 return True
             # https://fafae.com/ o http://fafea.com/
             elif char == '/':
                 self.current_state = 19
                 return True
         elif self.current_state == 13:
-            if self.all_letters_except(char, {'r'}) or self.is_valid_number(char):
-                self.current_state = 8
+            if self.all_letters_except(char, {'r'}) or self.is_valid_number(char) or self.is_special_characters(char):
+                self.current_state = 22
                 return True
             # https://fafae.or o http://fafea.or
             elif char == 'r':
                 self.current_state = 14
                 return True
         elif self.current_state == 14:
-            if self.all_letters_except(char, {'g'}) or self.is_valid_number(char):
-                self.current_state = 8
+            if self.all_letters_except(char, {'g'}) or self.is_valid_number(char) or self.is_special_characters(char):
+                self.current_state = 22
                 return True
             # https://fafae.org o http://fafea.org
             elif char == 'g':
                 self.current_state = 15
                 return True
         elif self.current_state == 15:
-            if self.is_letter(char) or self.is_valid_number(char):
-                self.current_state = 8
+            if self.is_letter(char) or self.is_valid_number(char) or self.is_special_characters(char):
+                self.current_state = 22
                 return True
             # https://fafae.org/ o http://fafea.org/
             elif char == '/':
                 self.current_state = 19
                 return True
         elif self.current_state == 16:
-            if self.all_letters_except(char, {'e'}) or self.is_valid_number(char):
-                self.current_state = 8
+            if self.all_letters_except(char, {'e'}) or self.is_valid_number(char) or self.is_special_characters(char):
+                self.current_state = 22
                 return True
             # https://fafae.ne o http://fafea.ne
             elif char == 'e':
                 self.current_state = 17
                 return True
         elif self.current_state == 17:
-            if self.all_letters_except(char, {'t'}) or self.is_valid_number(char):
-                self.current_state = 8
+            if self.all_letters_except(char, {'t'}) or self.is_valid_number(char) or self.is_special_characters(char):
+                self.current_state = 22
                 return True
             # https://fafae.net o http://fafea.net
             elif char == 't':
                 self.current_state = 18
                 return True
         elif self.current_state == 18:
-            if self.is_letter(char) or self.is_valid_number(char):
-                self.current_state = 8
+            if self.is_letter(char) or self.is_valid_number(char) or self.is_special_characters(char):
+                self.current_state = 22
                 return True
             # https://fafae.net/ o http://fafea.net/
             elif char == '/':
@@ -168,8 +172,21 @@ class URLValidatorDFA:
             # https://fafae.org/feaf/ o http://fafea.org/feaf/
             if self.is_letter(char) or self.is_valid_number(char):
                 return True
-            elif char == '/':
+            elif char == '/' or self.is_special_characters(char):
                 self.current_state = 19
+                return True
+        elif self.current_state == 21:
+            if self.is_letter(char) or self.is_valid_number(char):
+                return True
+            elif self.is_special_characters(char):
+                self.current_state = 22
+                return True
+            elif char == '.':
+                self.current_state = 9
+                return True
+        elif self.current_state == 22:
+            if self.is_letter(char) or self.is_valid_number(char):
+                self.current_state = 21
                 return True
         
         # Transición fallida, rechaza la URL
