@@ -10,28 +10,28 @@ class URLValidatorApp(FileReader):
     def read_excel(self, file_path):
         try:
             content = super().read_excel(file_path)
-            self.validate_urls(content)
+            return self.validate_urls(content)
         except Exception as e:
             raise Exception(e)
 
     def read_word(self, file_path):
         try:
             content = super().read_word(file_path)
-            self.validate_urls(content)
+            return self.validate_urls(content)
         except Exception as e:
             raise Exception(e)
             
     def read_pdf(self, file_path):
         try:
             content = super().read_pdf(file_path)
-            self.validate_urls(content)
+            return self.validate_urls(content)
         except Exception as e:
             raise Exception(e)
 
     def read_web(self, file_path):
         try: 
             content = super().read_web(file_path)
-            self.validate_urls(content)
+            return self.validate_urls(content)
         except Exception as e:
             raise Exception(e)
 
@@ -45,6 +45,7 @@ class URLValidatorApp(FileReader):
                 print(f"Fila {index}: URL no válida: {url}")
                 results.append([index, url, "URL no válida"])
         self.generate_csv(results)
+        return results
 
     def generate_csv(self, results):
         # Guarda en un archivo CSV
