@@ -1,35 +1,11 @@
-import tkinter as tk
-from tkinter import filedialog, messagebox
 import pandas as pd
 import docx
 import PyPDF2
 from bs4 import BeautifulSoup
 
 class FileReader:
-    def __init__(self, master):
-        self.master = master
-        self.master.title("URLValidator")
-
-        self.btn_open = tk.Button(self.master, text="Abrir archivo", command=self.open_file)
-        self.btn_open.pack(pady=20)
-
-    def open_file(self):
-        file_path = filedialog.askopenfilename(
-            filetypes=[("Excel files", "*.xlsx"),
-                       ("Word files", "*.docx"),
-                       ("PDF files", "*.pdf"),
-                       ("Web files", "*.html;*.htm")])
-        
-        if file_path.endswith('.xlsx'):
-            self.read_excel(file_path)
-        elif file_path.endswith('.docx'):
-            self.read_word(file_path)
-        elif file_path.endswith('.pdf'):
-            self.read_pdf(file_path)
-        elif file_path.endswith('.html') or file_path.endswith('.htm'):
-            self.read_web(file_path)
-        else:
-            messagebox.showerror("Error", "Formato de archivo no soportado.")
+    def __init__(self):
+        print("Clase FileReader cargada!")
 
     def read_excel(self, file_path):
         try:
@@ -43,8 +19,7 @@ class FileReader:
             # Devuelve una lista de (índice, URL)
             return urls  
         except Exception as e:
-            messagebox.showerror("Error", f"No se pudo leer el archivo Excel: {e}")
-            return []
+            raise Exception(f"No se pudo leer el archivo Excel: {e}")
 
     def read_word(self, file_path):
         try:
@@ -52,8 +27,7 @@ class FileReader:
             urls = [(i, para.text) for i, para in enumerate(doc.paragraphs) if para.text]
             return urls 
         except Exception as e:
-            messagebox.showerror("Error", f"No se pudo leer el archivo Word: {e}")
-            return []
+            raise Exception(f"No se pudo leer el archivo Word: {e}")
 
     def read_pdf(self, file_path):
         try:
@@ -70,8 +44,7 @@ class FileReader:
                             urls.append((line_index, line.strip()))
             return urls 
         except Exception as e:
-            messagebox.showerror("Error", f"No se pudo leer el archivo PDF: {e}")
-            return []
+              raise Exception(f"No se pudo leer el archivo PDF: {e}")
 
     def read_web(self, file_path):
         try:
@@ -83,5 +56,4 @@ class FileReader:
             urls = [(i, line.strip()) for i, line in enumerate(lines) if line.strip()]
             return urls
         except Exception as e:
-            messagebox.showerror("Error", f"No se pudo leer el archivo web: {e}")
-            return []
+            raise Exception(f"No se pudo leer el archivo web: {e}")
