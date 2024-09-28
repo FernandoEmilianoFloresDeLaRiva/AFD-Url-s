@@ -66,10 +66,6 @@ class URLValidatorDFA:
             if self.is_letter(char) or self.is_valid_number(char):
                 self.current_state = 21
                 return True
-            elif char == '.':
-                # https://fafae. o http://fafea.
-                self.current_state = 9
-                return True
         elif self.current_state == 9:
             # https://fafae.fsafs o http://fafea.fsafsa
             if self.all_letters_except(char, {'c', 'o', 'n'}) or self.is_valid_number(char):
