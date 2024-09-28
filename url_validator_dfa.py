@@ -201,6 +201,5 @@ class URLValidatorDFA:
             if not self.transition(char):
                 return False
             self.current_pos += 1
-        print(self.current_state)
         # Verificar si terminó en un estado de aceptación
         return self.current_state in FINAL_STATES
