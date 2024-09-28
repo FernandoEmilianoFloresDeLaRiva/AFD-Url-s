@@ -1,7 +1,7 @@
 import pandas as pd
 import docx
-import PyPDF2
 from bs4 import BeautifulSoup
+import pdfplumber
 
 class FileReader:
     def __init__(self):
@@ -31,12 +31,11 @@ class FileReader:
 
     def read_pdf(self, file_path):
         try:
-            with open(file_path, "rb") as file:
-                reader = PyPDF2.PdfReader(file)
+            with pdfplumber.open(file_path) as pdf:
                 urls = []
                 # Contador para las líneas
                 line_index = 0  
-                for page_idx, page in enumerate(reader.pages):
+                for page_idx, page in enumerate(pdf.pages):
                     text = page.extract_text()
                     if text:
                         for line in text.splitlines():
