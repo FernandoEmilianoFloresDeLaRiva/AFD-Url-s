@@ -21,7 +21,6 @@ class URLValidatorApp(FileReader):
         except Exception as e:
             raise Exception(e)
             
-
     def read_pdf(self, file_path):
         try:
             content = super().read_pdf(file_path)
