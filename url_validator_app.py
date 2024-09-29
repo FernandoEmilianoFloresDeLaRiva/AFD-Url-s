@@ -40,10 +40,10 @@ class URLValidatorApp(FileReader):
         for index, url in urls:
             if self.validator.is_valid_url(url):
                 print(f"Fila {index}: URL válida: {url}")
-                results.append([index, url, "URL válida"])
+                results.append([index, url, "URL aceptada"])
             else:
                 print(f"Fila {index}: URL no válida: {url}")
-                results.append([index, url, "URL no válida"])
+                results.append([index, url, "URL invalida"])
         self.generate_csv(results)
         return results
 

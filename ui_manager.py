@@ -92,7 +92,7 @@ class UIManager:
         self.status_label.config(text=f"¡Analisis del archivo '{file_name}' completado!")
         self.report_button.config(state=tk.NORMAL, cursor="hand2")
         for index, url, status in results:
-                tag = 'valid' if status == 'URL válida' else 'invalid'
+                tag = 'valid' if status == 'URL aceptada' else 'invalid'
                 self.tree.insert("", "end", values=(url, status), tags=(tag,)) 
     
     def disableSettings(self):
