@@ -1,11 +1,18 @@
 from file_reader import FileReader
-from url_validator_dfa import URLValidatorDFA
+from AFD import Automata
+from validator_txt import ValidatorTxt
+from leer_afd_txt import leer_automata_de_txt
 import csv
 
 class URLValidatorApp(FileReader):
     def __init__(self):
         super().__init__()
-        self.validator = URLValidatorDFA() 
+        self.data = leer_automata_de_txt('automata.txt')
+        self.validatorData = ValidatorTxt(self.data) 
+        if self.validatorData.validar_existencia_alfabeto():
+            self.validator = Automata(self.data)
+        else:
+            raise Exception('Define bien el automata')
 
     def read_excel(self, file_path):
         try:
@@ -38,12 +45,14 @@ class URLValidatorApp(FileReader):
     def validate_urls(self, urls):
         results = []  
         for index, url in urls:
-            if self.validator.is_valid_url(url):
+            if self.validator.validar_cadena(url):
                 print(f"Fila {index}: URL válida: {url}")
                 results.append([index, url, "URL aceptada"])
             else:
+                print(url)
                 print(f"Fila {index}: URL no válida: {url}")
                 results.append([index, url, "URL invalida"])
+            self.validator.restaurar_automata()
         self.generate_csv(results)
         return results
 

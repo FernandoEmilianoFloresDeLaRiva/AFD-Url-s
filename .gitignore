@@ -3,3 +3,5 @@ __pycache__/
 documentos_prueba/
 
 resultados_url.csv
+
+url_validator_dfa.py
